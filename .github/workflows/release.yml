@@ -15,13 +15,15 @@ jobs:
           ref: master
 
       - name: Set up Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
+        #uses: actions/setup-node@v2
         with:
           node-version: 18
 
       - name: Cache NPM Dependencies
         id: cache-npm-dependencies
-        uses: actions/cache@v2
+        #uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: node_modules
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
@@ -38,7 +40,8 @@ jobs:
           npm run build-prod
 
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
+        #uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist
@@ -53,7 +56,8 @@ jobs:
           ref: build
 
       - name: Download Build
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4f
+        #uses: actions/download-artifact@v2
         with:
           name: dist
           path: dist
