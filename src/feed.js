@@ -28,18 +28,31 @@ async function getNewFeedItemsFrom(feedUrl) {
 
 // Woori
 // 간단한 중복 제거 함수 (링크 기준 + 보조로 제목 기준)
+// function dedupe(items) {
+//   const seen = new Set();
+//   const out = [];
+//   for (const it of items) {
+//     // 1순위: link가 있으면 link 기준
+//     // 2순위: link 없으면 제목+발행일 조합 기준
+//     const key = it.link ? it.link.trim() : `${it.title}::${it.pubDate}`;
+//     if (seen.has(key)) continue;
+//     seen.add(key);
+//     out.push(it);
+//   }
+//   return out;
+// }
 function dedupe(items) {
   const seen = new Set();
-  const out = [];
-  for (const it of items) {
+
+  return items.filter((it) => {
     // 1순위: link가 있으면 link 기준
     // 2순위: link 없으면 제목+발행일 조합 기준
     const key = it.link ? it.link.trim() : `${it.title}::${it.pubDate}`;
-    if (seen.has(key)) continue;
+
+    if (seen.has(key)) return false;
     seen.add(key);
-    out.push(it);
-  }
-  return out;
+    return true;
+  });
 }
 
 export default async function getNewFeedItems() {
@@ -56,7 +69,7 @@ export default async function getNewFeedItems() {
   // NOTE: Woori
   // remove duplicate news
   allNewFeedItems = dedupe(allNewFeedItems);
-  
+
   // sort feed items by published date
   allNewFeedItems.sort((a, b) => new Date(a.pubDate) - new Date(b.pubDate));
 
